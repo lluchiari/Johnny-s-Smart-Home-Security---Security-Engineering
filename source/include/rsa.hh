@@ -13,8 +13,7 @@ typedef struct {
 	int n;
 } DATA_PUBLIC;
 
-class RSA
-{
+class RSA {
 public:
     RSA();
     ~RSA();
