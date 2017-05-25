@@ -1,12 +1,10 @@
 #include "../include/rsa.hh"
 
-RSA::RSA()
-{
+RSA::RSA() {
 
 }
 
-RSA::gerateKey()
-{
+void RSA::generateKey() {
 
 }
 

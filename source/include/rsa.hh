@@ -2,10 +2,16 @@
 #define _RSA_HH_
 
 // This is the DATA structure for the private key
-typedef int DATA_PRIVATE;
+typedef struct {
+	int d;
+	int n;
+} DATA_PRIVATE;
 
-// This is the DATA structure for the private key
-typedef int DATA_PUBLIC;
+// This is the DATA structure for the public key
+typedef struct {
+	int e;
+	int n;
+} DATA_PUBLIC;
 
 class RSA
 {
@@ -13,14 +19,16 @@ public:
     RSA();
     ~RSA();
 public:
-    void gerateKey();
+    void generateKey();
 
 private:
-    DATA_PRIVATE _privateKey;         //This is the private key gerated. The data type is
+	DATA_PRIVATE _privateKey;         //This is the private key generated.
+	DATA_PUBLIC _publicKey;
     int _p, _q;
 
 public:
-    DATA_PUBLIC publicKey;
+	void setPublicKey(DATA_PUBLIC p) { _publicKey.e = p.e; _publicKey.n = p.n; }
+	DATA_PUBLIC getPublicKey() { return _publicKey; }
 };
 
-#endif _RSA_HH_
+#endif
