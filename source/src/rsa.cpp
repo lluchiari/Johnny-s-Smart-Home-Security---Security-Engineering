@@ -17,4 +17,3 @@ void RSA::generateKey() {
     /* Calculate the Gratest Common Divisor */
     gdc();
 }
-
