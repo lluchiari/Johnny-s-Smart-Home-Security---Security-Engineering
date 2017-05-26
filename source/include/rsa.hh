@@ -4,13 +4,13 @@
 #include <include/InfInt.h>
 #include <include/utils.hh>
 
-// This is the DATA structure for the private key
+/// DATA structure for the private key
 typedef struct {
 	int d;
 	int n;
 } DATA_PRIVATE;
 
-// This is the DATA structure for the public key
+/// DATA structure for the public key
 typedef struct {
 	int e;
 	int n;

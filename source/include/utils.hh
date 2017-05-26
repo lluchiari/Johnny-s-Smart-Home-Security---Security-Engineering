@@ -21,10 +21,12 @@ namespace utils {
 			y /= 2;
 			g *= 2;
 		}
+
 		u = x;
 		v = y;
 		A = D = 1;
 		B = C = 0;
+
 		do {
 			while(u % 2 == 0) {
 				u /= 2;
@@ -64,6 +66,11 @@ namespace utils {
 		return g*v;
 	}
 
+	/**
+	 * @brief infAbs, calcula o valor absoluto do número 'a'
+	 * @param a
+	 * @return Valor absoluto de 'a'
+	 */
 	inline InfInt infAbs(InfInt a) {
 		return (a < 0 ? a *= -1 : a);
 	}
