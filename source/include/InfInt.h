@@ -336,7 +336,7 @@ inline InfInt::InfInt(unsigned long long l) : pos(true)
     } while (l > 0);
 }
 
-inline InfInt::InfInt(const InfInt& l) : pos(l.pos), val(l.val)
+inline InfInt::InfInt(const InfInt& l) : val(l.val), pos(l.pos)
 {
     //PROFINY_SCOPE
 }
@@ -472,7 +472,7 @@ inline const InfInt& InfInt::operator=(unsigned long long l)
     return *this;
 }
 
-const InfInt& InfInt::operator=(const InfInt& l)
+inline const InfInt& InfInt::operator=(const InfInt& l)
 {
     //PROFINY_SCOPE
     pos = l.pos;
@@ -1170,14 +1170,14 @@ inline bool InfInt::equalizeSigns()
                 int k = 0, index = i + 1;
                 for (; (size_t)(index) < val.size() && val[index] == 0; ++k, ++index); // count adjacent zeros on left
                 //if ((size_t)(index) < val.size() && val[index] > 0)
-                { // number on the left is positive
-                    val[index] -= 1;
-                    val[i] += BASE;
-                    for (; k > 0; --k)
-                    {
-                        val[i + k] = UPPER_BOUND;
-                    }
-                }
+//                { // number on the left is positive
+				val[index] -= 1;
+				val[i] += BASE;
+				for (; k > 0; --k)
+				{
+					val[i + k] = UPPER_BOUND;
+				}
+//                }
             }
         }
     }
@@ -1190,14 +1190,14 @@ inline bool InfInt::equalizeSigns()
                 int k = 0, index = i + 1;
                 for (; (size_t)(index) < val.size() && val[index] == 0; ++k, ++index); // count adjacent zeros on right
                 //if ((size_t)(index) < val.size() && val[index] < 0)
-                { // number on the left is negative
-                    val[index] += 1;
-                    val[i] -= BASE;
-                    for (; k > 0; --k)
-                    {
-                        val[i + k] = -UPPER_BOUND;
-                    }
-                }
+//                { // number on the left is negative
+				val[index] += 1;
+				val[i] -= BASE;
+				for (; k > 0; --k)
+				{
+					val[i + k] = -UPPER_BOUND;
+				}
+//                }
             }
         }
     }
