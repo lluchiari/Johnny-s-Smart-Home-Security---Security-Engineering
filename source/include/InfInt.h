@@ -472,7 +472,7 @@ inline const InfInt& InfInt::operator=(unsigned long long l)
     return *this;
 }
 
-const InfInt& InfInt::operator=(const InfInt& l)
+inline const InfInt& InfInt::operator=(const InfInt& l)
 {
     //PROFINY_SCOPE
     pos = l.pos;
