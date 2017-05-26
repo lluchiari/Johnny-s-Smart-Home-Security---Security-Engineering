@@ -6,8 +6,8 @@ RSA::RSA() {
 
 void RSA::generateKey() {
     /* Gerating the High primes */
-    this->_p = geratePrime();
-    this->_q = geratePrime();
+	this->_p = generatePrime();
+	this->_q = generatePrime();
 
     /* Calculating Paramters based on gerated primes */
     int n, x;

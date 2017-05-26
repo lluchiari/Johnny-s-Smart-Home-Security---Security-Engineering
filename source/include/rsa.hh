@@ -28,6 +28,7 @@ private:
 public:
 	void setPublicKey(DATA_PUBLIC p) { _publicKey.e = p.e; _publicKey.n = p.n; }
 	DATA_PUBLIC getPublicKey() { return _publicKey; }
+	
 };
 
 #endif
