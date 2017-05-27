@@ -74,6 +74,21 @@ namespace utils {
 	inline InfInt infAbs(InfInt a) {
 		return (a < 0 ? a *= -1 : a);
 	}
+
+    /**
+     * @brief genRandomString
+     * @param s
+     * @param len
+     */
+    inline void genRandomString(char *s, const int len) {
+        static const char num[] = "0123456789";
+
+        for (int i = 0; i < len; ++i) {
+        s[i] = num[rand() % (sizeof(num) - 1)];
+        if(!i && s[i]=='0'){s[i] = '1';}
+        }
+        s[len] = 0;
+    }
 }
 
 

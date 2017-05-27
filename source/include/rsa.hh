@@ -5,6 +5,8 @@
 #include <include/utils.hh>
 #include <include/millerRabin.hh>
 
+#define MILLER_RABIN_CONSTANT 90
+
 /// DATA structure for the private key
 typedef struct {
     InfInt d;
@@ -25,7 +27,7 @@ public:
     void generateKey();
 	void setPublicKey(DATA_PUBLIC p) { _publicKey.e = p.e; _publicKey.n = p.n; }
 	DATA_PUBLIC getPublicKey() { return _publicKey; }
-private:
+
     /**
      * @brief giveMeAClosedLowPrime gives the first prime lower than a supposed number
      * @param supposed is a integer used as base number

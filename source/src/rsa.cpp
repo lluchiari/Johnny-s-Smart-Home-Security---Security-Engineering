@@ -26,3 +26,32 @@ void RSA::generateKey() {
     /* Calculate the Gratest Common Divisor */
 	utils::gcd(_p, _q);
 }
+
+InfInt RSA::giveMeAClosedLowPrime(InfInt supposed)
+{
+    while(!isPrime(supposed, MILLER_RABIN_CONSTANT))
+    {
+        supposed -= 1;
+    }
+    return supposed;
+}
+
+InfInt RSA::giveMeAClosedHighPrime(InfInt supposed)
+{
+    while(!isPrime(supposed, MILLER_RABIN_CONSTANT))
+    {
+        supposed += 1;
+    }
+    return supposed;
+}
+
+InfInt RSA::giveMeARandonPrime(int k)
+{
+    srand(time(NULL));
+    char *aux;
+    aux = (char *) malloc(sizeof(char)*k);
+    utils::genRandomString(aux, k);
+    InfInt number = (const char*) aux;
+    free(aux);
+    return giveMeAClosedHighPrime(number);
+}
