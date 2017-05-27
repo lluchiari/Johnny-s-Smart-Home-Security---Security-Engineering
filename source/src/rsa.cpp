@@ -1,30 +1,29 @@
-#include "../include/rsa.hh"
+#include <include/rsa.hh>
 
 RSA::RSA() {
 
 }
 
-void RSA::generateKey() {
-    /* Gerating the High primes */
-    this->_p = generatePrime(1);
-    this->_q = generatePrime(0);
-
-    /* Calculating Paramters based on gerated primes */
-    InfInt n, z, e, d;
-    n = _p*_q;
-    z = (_p-1)*(_q-1);
-    e = 17;
-
-
-    /* Calculate the Gratest Common Divisor */
-    //gdc();
+RSA::RSA(int p, int q) {
+	_p = p;
+	_q = q;
 }
 
-InfInt RSA::generatePrime(int teste)
-{
-    if (teste)
-    {
-        return 11;
-    }
-    return 13;
+RSA::~RSA() {
+
+}
+
+void RSA::generateKey() {
+    /* Gerating the High primes */
+
+//	this->_p = generatePrime();
+//	this->_q = generatePrime();
+
+	/* Calculating Parameters based on generated primes */
+    int n, x;
+    n = _p*_q;
+	x = (_p-1)*(_q-1);
+
+    /* Calculate the Gratest Common Divisor */
+	utils::gcd(_p, _q);
 }

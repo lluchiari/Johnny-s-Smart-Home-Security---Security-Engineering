@@ -6,6 +6,7 @@ CONFIG += c++11
 TARGET = johnnysSHS
 CONFIG += console
 CONFIG -= app_bundle
+CCFLAG += -DINFINT_USE_EXCEPTIONS
 
 TEMPLATE = app
 
@@ -26,4 +27,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     include/rsa.hh \
-    include/InfInt.h
+    include/InfInt.h \
+    include/utils.hh
