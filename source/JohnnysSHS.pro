@@ -12,7 +12,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     src/rsa.cpp \
-    src/millerRabin.cpp
+    src/millerRabin.cpp \
+    src/utils.cpp
 
 
 # The following define makes your compiler emit warnings if you use
