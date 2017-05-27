@@ -5,15 +5,13 @@
 #include <include/utils.hh>
 #include <include/millerRabin.hh>
 
-#define MILLER_RABIN_CONSTANT 90
-
 /// DATA structure for the private key
 typedef struct {
     InfInt d;
     InfInt n;
 } DATA_PRIVATE;
 
-/* This is the DATA structure for the public key */
+/// DATA structure for the public key
 typedef struct {
     InfInt e;
     InfInt n;
@@ -27,33 +25,13 @@ public:
     void generateKey();
 	void setPublicKey(DATA_PUBLIC p) { _publicKey.e = p.e; _publicKey.n = p.n; }
 	DATA_PUBLIC getPublicKey() { return _publicKey; }
-
-    /**
-     * @brief giveMeAClosedLowPrime gives the first prime lower than a supposed number
-     * @param supposed is a integer used as base number
-     * @return the closest lower prime integer to supposed
-     */
-    InfInt giveMeAClosedLowPrime(InfInt supposed);
-
-    /**
-     * @brief giveMeAClosedHighPrime gives the first prime higer than a supposed number
-     * @param supposed is a integer used as base number
-     * @return the closest higher prime integer to supposed
-     */
-    InfInt giveMeAClosedHighPrime(InfInt supposed);
-
-    /**
-     * @brief giveMeARandonPrime gives a prime generated randomically with a specific length
-     * @param k is the integer length
-     * @return the randomically integer prime generated with k length
-     */
-    InfInt giveMeARandonPrime(int k);
-
 private:
     /* This is the private key generated */
     DATA_PRIVATE _privateKey;
 	DATA_PUBLIC _publicKey;
     int _p, _q;
+
+	void setPrivateKey(DATA_PRIVATE p) { _privateKey.d = p.d; _privateKey.n = p.n; }
 };
 
 #endif

@@ -2,6 +2,7 @@
 #include <include/rsa.hh>
 #include <include/InfInt.h>
 #include <include/utils.hh>
+#include <include/millerRabin.hh>
 
 int main(int argc, char *argv[]) {
 //    InfInt p = "154725368117940698788029053217798887175214759640744378541226187572025414018010181004439221967045836431399408128455038077191873040800659709605935985084899530753233413028684685152782225472103307582636553459294347054889505097412841939917674271786860290832603626651911507603833436210130113055877637427181462712487";
@@ -9,7 +10,7 @@ int main(int argc, char *argv[]) {
 //	std::cout << "gcd(" << p.toString() << ", " << q.toString() << "): ";
 //	std::cout << utils::gcd(p, q) << std::endl;
 //	std::cout << "p * q = " << (p * q).toString() << std::endl;
-    RSA test;
-    std::cout << test.giveMeARandonPrime(15) << std::endl;
+//    RSA test;
+	std::cout << MillerRabin::randomPrime(512) << std::endl;
     return 0;
 }
