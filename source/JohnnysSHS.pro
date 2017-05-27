@@ -11,7 +11,8 @@ CCFLAG += -DINFINT_USE_EXCEPTIONS
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    src/rsa.cpp
+    src/rsa.cpp \
+    src/millerRabin.cpp
 
 
 # The following define makes your compiler emit warnings if you use
@@ -28,4 +29,5 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += \
     include/rsa.hh \
     include/InfInt.h \
-    include/utils.hh
+    include/utils.hh \
+    include/millerRabin.hh
