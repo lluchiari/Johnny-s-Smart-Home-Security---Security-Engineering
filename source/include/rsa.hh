@@ -20,7 +20,7 @@ typedef struct {
 class RSA {
 public:
     RSA();
-	RSA(int p, int q);
+	RSA(InfInt p, InfInt q);
     ~RSA();
     void generateKey();
 	void setPublicKey(DATA_PUBLIC p) { _publicKey.e = p.e; _publicKey.n = p.n; }
@@ -29,7 +29,7 @@ private:
     /* This is the private key generated */
     DATA_PRIVATE _privateKey;
 	DATA_PUBLIC _publicKey;
-    int _p, _q;
+	InfInt _p, _q;
 
 	void setPrivateKey(DATA_PRIVATE p) { _privateKey.d = p.d; _privateKey.n = p.n; }
 };

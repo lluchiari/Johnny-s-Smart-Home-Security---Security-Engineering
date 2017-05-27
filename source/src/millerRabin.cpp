@@ -1,27 +1,7 @@
-#include "include/millerRabin.hh"
+#include <include/millerRabin.hh>
 #include <include/utils.hh>
 
 namespace MillerRabin {
-
-	InfInt power(InfInt x, InfInt y, InfInt p) {
-		/* Just to Guarantee */
-		if(p == 1){ return 0; }
-		InfInt res = 1;      // Initialize result
-		x = x % p;  // Update x if it is more than or
-					// equal to p
-		while (y > 0) {
-			// If y is odd, multiply x with result
-		//if (y & 1)
-		InfInt aux = y%2;
-		if(aux == 1)
-				res = (res*x) % p;
-
-			// y must be even now
-		y = y/2; //y = y>>1;
-			x = (x*x) % p;
-		}
-		return res;
-	}
 
 	bool millerTest(InfInt d, InfInt n) {
 		// Pick a random number in [2..n-2]
@@ -32,7 +12,7 @@ namespace MillerRabin {
 		InfInt a = aux + 2;
 
 		// Compute a^d % n
-		InfInt x = power(a, d, n);
+		InfInt x = utils::modPow(a, d, n);
 
 		if (x == 1  || x == n-1)
 		   return true;

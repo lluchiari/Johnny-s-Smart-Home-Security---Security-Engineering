@@ -57,6 +57,30 @@ namespace utils {
 		return g*v;
 	}
 
+	InfInt invMul(InfInt a, InfInt n) {
+		InfInt t, r, newt, newr, auxt, auxr, quot;
+		t = 0;
+		newt = 1;
+		r = n;
+		newr = a;
+
+		while(newr != 0) {
+			quot = r / newr;
+			auxt = t;
+			t = newt;
+			newt = auxt - (quot * newt);
+			auxr = r;
+			r = newr;
+			newr = auxr - (quot * newr);
+		}
+
+		if(r > 1)
+			return 0;
+		if(t < 0)
+			t += n;
+		return t;
+	}
+
 	InfInt infAbs(InfInt a) {
 		return (a < 0 ? a *= -1 : a);
 	}
@@ -69,5 +93,25 @@ namespace utils {
 			if(!i && s[i]=='0'){s[i] = '1';}
 		}
 		s[len] = 0;
+	}
+
+	InfInt modPow(InfInt x, InfInt y, InfInt p) {
+		/* Just to Guarantee */
+		if(p == 1){ return 0; }
+		InfInt res = 1;      // Initialize result
+		x = x % p;  // Update x if it is more than or
+					// equal to p
+		while (y > 0) {
+			// If y is odd, multiply x with result
+		//if (y & 1)
+		InfInt aux = y%2;
+		if(aux == 1)
+				res = (res*x) % p;
+
+			// y must be even now
+		y = y/2; //y = y>>1;
+			x = (x*x) % p;
+		}
+		return res;
 	}
 }
