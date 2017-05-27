@@ -26,9 +26,6 @@ public:
 	DATA_PUBLIC getPublicKey() { return _publicKey; }
 
 private:
-    InfInt generatePrime(int);
-
-private:
     /* This is the private key generated */
     DATA_PRIVATE _privateKey;
 	DATA_PUBLIC _publicKey;

@@ -15,7 +15,6 @@ RSA::~RSA() {
 
 void RSA::generateKey() {
     /* Gerating the High primes */
-
 //	this->_p = generatePrime();
 //	this->_q = generatePrime();
 
