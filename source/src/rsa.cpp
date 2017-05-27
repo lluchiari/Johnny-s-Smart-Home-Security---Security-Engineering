@@ -22,7 +22,7 @@ RSA::~RSA() {
  * @variable d, expoente da fórmula da chave privada
  */
 void RSA::generateKey() {
-    /* Gerating the High primes */
+	/* Generating the High primes */
 //	this->_p = generatePrime();
 //	this->_q = generatePrime();
 
@@ -39,5 +39,7 @@ void RSA::generateKey() {
 	d = utils::invMul(e, n);
 	std::cout << "Private key: d = " << d.toString() << "\nPublic key: e = " << e.toString() << std::endl;
 	std::cout << "Modulus: n = " << n.toString() << std::endl;
-
+	_privateKey = d;
+	_publicKey = e;
+	_modulus = n;
 }
