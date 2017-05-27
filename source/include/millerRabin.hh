@@ -10,7 +10,7 @@
 #include <ctime>
 
 
-/* This code was based on a code foun in
+/* This code was based on a code found in
  * <http://www.geeksforgeeks.org/primality-test-set-3-miller-rabin/> */
 
 /**
