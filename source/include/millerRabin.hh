@@ -9,9 +9,8 @@
 #include <cmath>
 #include <ctime>
 
-#define MILLER_RABIN_CONSTANT 90
+#define MILLER_RABIN_CONSTANT 4
 
-<<<<<<< HEAD
 /* Code based on a code found in
  * <http://www.geeksforgeeks.org/primality-test-set-3-miller-rabin/> */
 
