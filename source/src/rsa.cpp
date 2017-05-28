@@ -56,8 +56,6 @@ InfInt *RSA::encryption(const std::string &message) {
 		aux = message[i];
 		aux = utils::modPow(aux, _publicKey, _modulus);
 		crypto += aux.toString();
-//        cryptogram[i] = utils::modPow(aux, this->_publicKey, this->_modulus);
-//		std::cout << crypto <<"\n";
     }
 	cryptogram = new InfInt(crypto);
 	return cryptogram;
