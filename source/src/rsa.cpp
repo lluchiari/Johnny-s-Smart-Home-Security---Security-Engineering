@@ -1,5 +1,6 @@
 #include <include/rsa.hh>
 #include <iostream>
+#include <fstream>
 #include <unistd.h>
 #include <string.h>
 
@@ -7,15 +8,29 @@ RSA::RSA(int bits) {
 	_p = MillerRabin::randomPrime(bits);
 	usleep(1000000); // necessário para garantir primos diferentes entre si
 	_q = MillerRabin::randomPrime(bits);
+	_slice = NULL;
 }
 
 RSA::RSA(InfInt p, InfInt q) {
 	_p = p;
 	_q = q;
+	_slice =  NULL;
 }
 
 RSA::~RSA() {
+	if(_slice != NULL)
+		free(_slice);
+}
 
+void RSA::saveKeys() {
+	std::ofstream keysFile;
+	keysFile.open("keys.txt");
+	if(keysFile.is_open()) {
+		keysFile << "Private: " << _privateKey << "\n";
+		keysFile << "Public: " << _publicKey << "\n";
+		keysFile << "Modulus: " << _modulus << "\n";
+		keysFile.close();
+	}
 }
 
 /**
@@ -34,8 +49,8 @@ void RSA::generateKey() {
 	x = (_p-1)*(_q-1); // x é o totiente de n, ou seja, o tamanho do conjunto de coprimos de n
 
     /* Cálculo do maior divisor comum entre 'e' e 'x' */
-	while(utils::gcd(e, x) != 1)
-		e += 2;
+	if(e >= n) e = 3;
+	while(utils::gcd(e, x) != 1) e += 2;
 
 	/* Multiplicativo inverso de 'e', módulo 'n' */
 	d = utils::invMul(e, n);
@@ -44,24 +59,48 @@ void RSA::generateKey() {
 	_privateKey = d;
 	_publicKey = e;
 	_modulus = n;
+	saveKeys();
 }
 
-InfInt *RSA::encryption(const std::string &message) {
+InfInt *RSA::encryption(const std::__cxx11::string &message) {
 	InfInt *cryptogram;
 	std::string crypto;
     std::cout << "Encrypting: \"" << message << "\"" << std::endl;
 
     InfInt aux;
-	for(unsigned int i=0; i<message.size(); i++) {
+	_slice = (int*) malloc(message.size() * sizeof(int));
+	for(unsigned int i=0; i < message.size(); i++) {
 		aux = message[i];
+		std::cout << "Aux before mod: " << aux << std::endl;
 		aux = utils::modPow(aux, _publicKey, _modulus);
+		std::cout << "Aux size after mod: " << aux.numberOfDigits() << "\n";
+		std::cout << "Aux value: " << aux.toString() << '\n';
+		_slice[i] = aux.numberOfDigits();
 		crypto += aux.toString();
     }
 	cryptogram = new InfInt(crypto);
 	return cryptogram;
 }
 
-char *RSA::decryption(InfInt *criptogram) {
-    return NULL;
+void RSA::decryption(std::__cxx11::string &dec, InfInt *criptogram) {
+	std::string interm = criptogram->toString();
+	for(unsigned int i = 0, j = 0; i < criptogram->numberOfDigits(); i += _slice[j], j++) {
+		InfInt aux = interm.substr(i, i + _slice[j]);
+		std::cout << "Aux substring: " << aux.toString() << std::endl;
+		aux = utils::modPow(aux, _privateKey, _modulus);
+		std::cout << "Aux after pow: " << aux.toString() << std::endl;
 
+	}
+//	std::cout << "Intermediate: " << interm << std::endl;
+	///Ideia que não funcionou a princípio
+//	char a[3];
+//	for(unsigned int i = 0; i < interm.size(); i += 3) {
+//		a[0] = interm.at(i);
+//		a[1] = interm.at(i + 1);
+//		a[2] = interm.at(i + 2);
+//		int charVal = atoi(a);
+//		std::cout << "Integer: " << charVal << " -- ";
+//		std::cout << "To_string: " << (char)charVal << std::endl;
+//	}
+	std::cout << "Decrypted: " << dec << std::endl;
 }

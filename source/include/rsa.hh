@@ -16,13 +16,16 @@ public:
     void generateKey();
 	InfInt getPublicKey() { return _publicKey; }
 	InfInt *encryption(const std::__cxx11::string &message);
-	char *decryption(InfInt *criptogram);
+	void decryption(std::__cxx11::string &dec, InfInt *criptogram);
 
 private:
 	InfInt _privateKey;
 	InfInt _publicKey;
 	InfInt _modulus;
 	InfInt _p, _q;
+	int *_slice;
+
+	void saveKeys();
 };
 
 #endif
