@@ -96,11 +96,14 @@ namespace utils {
 	}
 
 	InfInt modPow(InfInt x, InfInt y, InfInt p) {
-		/* Just to Guarantee */
+        /* Just to Guarantee */
 		if(p == 1){ return 0; }
+
 		InfInt res = 1;      // Initialize result
+
 		x = x % p;  // Update x if it is more than or
 					// equal to p
+
         InfInt aux;
         while (y > 0) {
 			// If y is odd, multiply x with result

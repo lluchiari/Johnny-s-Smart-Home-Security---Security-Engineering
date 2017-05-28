@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <unistd.h>
 #include <include/rsa.hh>
 #include <include/InfInt.h>
@@ -19,14 +20,12 @@ int main(int argc, char *argv[]) {
 	usleep(1000000); // necessário para garantir primos diferentes entre si
 	InfInt q = MillerRabin::randomPrime(10);
 	std::cout << "P: " << p << "\nQ: " << q << std::endl;
-	RSA test(p, q);
+    RSA test(p, q);
 	test.generateKey();
 
-    const char * message = "Eu tinha uma galinha que se chamava Mary Lu.";
+    std::string message ("Eu tinha uma galinha que se chamava Mary Lu.");
     InfInt * cryptogram;
     cryptogram = test.encryption(message);
-
-    //std::cout << "Message: "<< message << std::endl << "Cryptogram: " << cryptogram << std::endl;
     free (cryptogram);
     return 0;
 }
