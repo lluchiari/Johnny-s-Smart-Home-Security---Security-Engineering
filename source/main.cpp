@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <unistd.h>
 #include <include/rsa.hh>
 #include <include/InfInt.h>

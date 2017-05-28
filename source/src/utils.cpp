@@ -108,13 +108,8 @@ namespace utils {
 
 			// y must be even now
 			y = y/2; //y = y>>1;
-//			if(y % 2 == 1)
-//				res = (res*x) % m;
-
-                // y must be even now
-//            y = y/2; //y = y>>1;
 			x = (x*x) % m;
 		}
 		return res;
 	}
-	}
+}
