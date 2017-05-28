@@ -1,6 +1,7 @@
 #include <include/rsa.hh>
 #include <iostream>
 #include <unistd.h>
+#include <string.h>
 
 RSA::RSA(int bits) {
 	_p = MillerRabin::randomPrime(bits);
@@ -54,7 +55,7 @@ InfInt *RSA::encryption(const char *message)
     for(int i=0; i<messageLen; i++)
     {
         std::cout << "Loop: {\n";
-        aux = message[i];
+		aux = (int) message[i];
         std::cout << "Aux:" << aux << "\n";
         cryptogram[i] = utils::modPow(aux, this->_publicKey, this->_modulus);
         std::cout << "Encripted: ";

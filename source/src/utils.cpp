@@ -95,30 +95,26 @@ namespace utils {
 		s[len] = 0;
 	}
 
-	InfInt modPow(InfInt x, InfInt y, InfInt p) {
+	InfInt modPow(InfInt x, InfInt y, InfInt m) {
 		/* Just to Guarantee */
-		if(p == 1){ return 0; }
+		if(m == 1){ return 0; }
 		InfInt res = 1;      // Initialize result
-		x = x % p;  // Update x if it is more than or
+		x %= m;  // Update x if it is more than or
 					// equal to p
         while (y > 0) {
 			// If y is odd, multiply x with result
-			//if (y & 1)
-			InfInt aux = y%2;
-			if(aux == 1)
-				res = (res*x) % p;
+			if(y % 2 == 1)
+				res = (res*x) % m;
 
 			// y must be even now
 			y = y/2; //y = y>>1;
-            //if (y & 1)
-            aux = y%2;
-            if(aux == 1)
-                    res = (res*x) % p;
+//			if(y % 2 == 1)
+//				res = (res*x) % m;
 
                 // y must be even now
-            y = y/2; //y = y>>1;
-			x = (x*x) % p;
+//            y = y/2; //y = y>>1;
+			x = (x*x) % m;
 		}
 		return res;
 	}
-}
+	}

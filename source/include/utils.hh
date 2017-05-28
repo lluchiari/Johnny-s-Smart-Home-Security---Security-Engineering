@@ -32,10 +32,10 @@ namespace utils {
 	 * @brief power is a utility function to do modular exponentiation.
 	 * @param x is the base
 	 * @param y is the exponent
-	 * @param p is the modulus
-	 * @return (x^y) % p
+	 * @param m is the modulus
+	 * @return (x^y) % m
 	 */
-	InfInt modPow(InfInt x, InfInt y, InfInt p);
+	InfInt modPow(InfInt x, InfInt y, InfInt m);
 
 	/**
 	 * @brief genRandomString, gera uma string com caracteres aleatórios
