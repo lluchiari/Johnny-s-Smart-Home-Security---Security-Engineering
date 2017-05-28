@@ -43,19 +43,21 @@ void RSA::generateKey() {
 	_modulus = n;
 }
 
-InfInt * RSA::encryption(std::string message)
-{
-    InfInt *cryptogram = (InfInt *) malloc(sizeof(InfInt)*message.size());
-    std::cout << "Encrypting: \"" << message << "\"" << std::endl;
+InfInt *RSA::encryption(const std::string &message) {
+  InfInt *cryptogram;
+  std::string crypto;
+  std::cout  << "Encrypting: \"" << message << "\"" << std::endl;
 
     InfInt aux;
-    for(int i=0; i<message.size(); i++)
-    {
-        aux = message[i];
-        cryptogram[i] = utils::modPow(aux, this->_publicKey, this->_modulus);
-        std::cout << cryptogram[i]<<"\n";
+  for(unsigned int i=0; i<message.size(); i++) {
+    aux = message[i];
+    aux = utils::modPow(aux, _publicKey, _modulus);
+    crypto += aux.toString();
+//        cryptogram[i] = utils::modPow(aux, this->_publicKey, this->_modulus);
+//    std::cout « crypto «"\n";
     }
-    return cryptogram;
+  cryptogram = new InfInt(crypto);
+  return cryptogram;
 }
 
 char * RSA::decryption(InfInt *criptogram)
