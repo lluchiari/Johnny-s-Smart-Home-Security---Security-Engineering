@@ -5,9 +5,10 @@
 #include <string.h>
 
 RSA::RSA(int bits) {
-	_p = MillerRabin::randomPrime(bits);
+	_p = MillerRabin::randomPrime(bits / 8);
 	usleep(1000000); // necessário para garantir primos diferentes entre si
-	_q = MillerRabin::randomPrime(bits);
+	_q = MillerRabin::randomPrime(bits / 8);
+	std::cout << "P: " << _p << "\nQ: " << _q << std::endl;
 	_slice = NULL;
 }
 
