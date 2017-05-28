@@ -11,7 +11,6 @@
 
 #define MILLER_RABIN_CONSTANT 90
 
-<<<<<<< HEAD
 /* Code based on a code found in
  * <http://www.geeksforgeeks.org/primality-test-set-3-miller-rabin/> */
 

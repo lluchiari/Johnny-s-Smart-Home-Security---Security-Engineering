@@ -7,11 +7,10 @@
 
 class RSA {
 public:
-    RSA();
+	RSA(int bits);
 	RSA(InfInt p, InfInt q);
     ~RSA();
     void generateKey();
-	void setPublicKey(InfInt p) { _publicKey = p; }
 	InfInt getPublicKey() { return _publicKey; }
 
 private:
@@ -19,8 +18,6 @@ private:
 	InfInt _publicKey;
 	InfInt _modulus;
 	InfInt _p, _q;
-
-	void setPrivateKey(InfInt p) { _privateKey = p; }
 };
 
 #endif

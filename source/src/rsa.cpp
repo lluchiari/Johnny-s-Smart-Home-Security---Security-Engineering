@@ -1,8 +1,11 @@
 #include <include/rsa.hh>
 #include <iostream>
+#include <unistd.h>
 
-RSA::RSA() {
-
+RSA::RSA(int bits) {
+	_p = MillerRabin::randomPrime(bits);
+	usleep(1000000); // necessário para garantir primos diferentes entre si
+	_q = MillerRabin::randomPrime(bits);
 }
 
 RSA::RSA(InfInt p, InfInt q) {
@@ -22,9 +25,6 @@ RSA::~RSA() {
  * @variable d, expoente da fórmula da chave privada
  */
 void RSA::generateKey() {
-	/* Generating the High primes */
-//	this->_p = generatePrime();
-//	this->_q = generatePrime();
 
 	/* Calculating Parameters based on generated primes */
 	InfInt n, x, e, d;
@@ -36,6 +36,7 @@ void RSA::generateKey() {
 	while(utils::gcd(e, x) != 1)
 		e += 2;
 
+	/* Multiplicativo inverso de 'e', módulo 'n' */
 	d = utils::invMul(e, n);
 	std::cout << "Private key: d = " << d.toString() << "\nPublic key: e = " << e.toString() << std::endl;
 	std::cout << "Modulus: n = " << n.toString() << std::endl;
