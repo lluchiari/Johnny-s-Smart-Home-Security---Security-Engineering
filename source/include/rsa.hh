@@ -15,7 +15,7 @@ public:
     ~RSA();
     void generateKey();
 	InfInt getPublicKey() { return _publicKey; }
-	InfInt *encryption(std::string message);
+	InfInt *encryption(const std::__cxx11::string &message);
 	char *decryption(InfInt *criptogram);
 
 private:

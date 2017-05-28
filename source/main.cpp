@@ -18,11 +18,11 @@ int main(void) {
 
 	RSA test(20);
 	test.generateKey();
-	const char *message = "Eu tinha uma galinha que se chamava Mary Lu.";
+	std::string message = "Eu tinha uma galinha que se chamava Mary Lu.";
 	InfInt *cryptogram;
 	cryptogram = test.encryption(message);
 
-	std::cout << "Message: "<< message << std::endl << "Cryptogram: " << cryptogram << std::endl;
+	std::cout << "Message: "<< message << std::endl << "Cryptogram: " << cryptogram->toString() << std::endl;
 	free (cryptogram);
     return 0;
 }
