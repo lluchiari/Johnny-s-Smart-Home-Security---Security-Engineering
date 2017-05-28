@@ -32,7 +32,7 @@ void RSA::generateKey() {
 	n = _p*_q; // n será o módulo da função
 	x = (_p-1)*(_q-1); // x é o totiente de n, ou seja, o tamanho do conjunto de coprimos de n
 
-	/* Cálculo do maior dividor comum entre 'e' e 'x' */
+    /* Cálculo do maior divisor comum entre 'e' e 'x' */
 	while(utils::gcd(e, x) != 1)
 		e += 2;
 
@@ -43,4 +43,29 @@ void RSA::generateKey() {
 	_privateKey = d;
 	_publicKey = e;
 	_modulus = n;
+}
+
+InfInt *RSA::encryption(const char *message)
+{
+    int messageLen = strlen(message);
+    InfInt *cryptogram = (InfInt *) malloc(sizeof(InfInt)*messageLen);
+    std::cout << "Allocating Memory [" << messageLen << "]*"<< sizeof(InfInt)<< "\n";
+    InfInt aux;
+    for(int i=0; i<messageLen; i++)
+    {
+        std::cout << "Loop: {\n";
+        aux = message[i];
+        std::cout << "Aux:" << aux << "\n";
+        cryptogram[i] = utils::modPow(aux, this->_publicKey, this->_modulus);
+        std::cout << "Encripted: ";
+        std::cout << cryptogram[i];
+        std::cout << "\n}\n";
+    }
+    return cryptogram;
+}
+
+char *RSA::decryption(InfInt *criptogram)
+{
+    return NULL;
+
 }

@@ -21,5 +21,12 @@ int main(void) {
 	RSA test2(20);
 	test.generateKey();
 	test2.generateKey();
+
+	const char *message = "Eu tinha uma galinha que se chamava Mary Lu.";
+	InfInt *cryptogram;
+    cryptogram = test.encryption(message);
+
+    //std::cout << "Message: "<< message << std::endl << "Cryptogram: " << cryptogram << std::endl;
+    free (cryptogram);
     return 0;
 }
