@@ -2,7 +2,8 @@
 #include <include/millerRabin.hh>
 
 namespace utils {
-	InfInt gcd(InfInt x, InfInt y) {
+
+	void gcd(std::pair<InfInt, InfInt> &results, InfInt x, InfInt y) {
 		InfInt g = 1;
 		InfInt a, b, u, v;
 		InfInt A, B, C, D;
@@ -54,31 +55,8 @@ namespace utils {
 
 		a = C;
 		b = D;
-		return g*v;
-	}
-
-	InfInt invMul(InfInt a, InfInt n) {
-		InfInt t, r, newt, newr, auxt, auxr, quot;
-		t = 0;
-		newt = 1;
-		r = n;
-		newr = a;
-
-		while(newr != 0) {
-			quot = r / newr;
-			auxt = t;
-			t = newt;
-			newt = auxt - (quot * newt);
-			auxr = r;
-			r = newr;
-			newr = auxr - (quot * newr);
-		}
-
-		if(r > 1)
-			return 0;
-		if(t < 0)
-			t += n;
-		return t;
+		results.first = a;
+		results.second = g * v;
 	}
 
 	InfInt infAbs(InfInt a) {
