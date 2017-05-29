@@ -51,7 +51,7 @@ namespace utils {
 
     std::string loadFromFile(std::string filename);
 
-    void writeToFile(InfInt *cryptogram, std::string filename);
+    void writeToFile(std::string info, std::string filename);
 }
 
 
