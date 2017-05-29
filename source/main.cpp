@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <string>
+#include <exception>
 #include <unistd.h>
 #include <include/rsa.hh>
 #include <include/InfInt.h>
@@ -13,7 +14,7 @@
 
 static void show_usage(std::string name)
 {
-    std::cerr << "Usage: " << name << " <option(s)> SOURCES"
+    std::cerr << "Usage: " << name << " <option(s)> SOURCES\n"
               << "Options:\n"
               << "\t-h,--help\t\tShow this help message\n"
               << "\t-d,--destination DESTINATION\tSpecify the destination path"
@@ -27,15 +28,15 @@ int main(int argc, char *argv[]) {
         if (argc < 2) {
             std::cout << argv[0] << " invalid option!\nTry '"<< argv[0]
                                  << " --help' for more informatio.\n";
-            return 1;
+            return -1;
         }
 
         /* Create the vector of flags. It is usefull for more than one command in the same line*/
         bool flags[PROGRAM_OPTIONS];
         for(int i=0; i< PROGRAM_OPTIONS; i++){flags[i] = false;}
 
-        std::vector <std::string> sources;
-        std::string destination;
+        std::vector<std::string> source;
+        //std::string destination;
 
         /* Loop Case to Evaluate all the commands */
         for (int i = 1; i < argc; ++i) {
@@ -51,20 +52,33 @@ int main(int argc, char *argv[]) {
             /* Command GERATE KEY --> flags[0] */
             else if((arg == "-g")|| (arg == "--generate-key"))
             {
+                //numero de bits
                 flags[0] = true;
             }
             /* Command ENCRYPT --> flags[1] */
             else if((arg == "-e")|| (arg == "--encrypt"))
             {
-
+                /* Make sure we aren't at the end of argv! */
+                if (i + 2 < argc) {
+                    /* Increment 'i' so we don't get the argument as the next argv[i]. */
+                    source.at(0) = argv[i++];                   // public key file
+                    source.at(1) = argv[i++];                   // message file
+                }
+                /* Uh-oh, there was no argument to the destination option. */
+                else
+                {
+                    std::cerr << "--encrypt option requires one argument." << std::endl;
+                    return -1;
+                }
+                flags[1] = true;
+            }
+            /* Command DECRYPT --> flags[2] */
+            else if((arg == "-d")|| (arg == "--decrypt"))
+            {
+                flags[2] = true;
             }
             /* Command ENCRYPT GENERATE KEY --> flags[2] */
             else if((arg == "-eak")|| (arg == "--encrypt-assimetric-key"))
-            {
-
-            }
-            /* Command ___ --> flags[2] */
-            else if((arg == "-d")|| (arg == "--decrypt"))
             {
 
             }
@@ -73,6 +87,71 @@ int main(int argc, char *argv[]) {
             {
 
             }
+            else{
+                show_usage(argv[0]);
+                return -1;
+            }
+        }
+
+
+        /* Flags Parser */
+        if(flags[1])                   //Crypting
+        {
+            RSA program();
+
+            /* Check if have to generate the key */
+            if(flags[0])
+            {
+                program.generateKey();
+            }
+            else
+            {
+                if(program.loadPublicKey(source.at(0)) == -1)
+                {
+                    std::cerr << "Error on loading public key" << std::endl;
+                    return -1;
+                }
+            }
+
+            try{
+                std::string message = utils::loadFromFile(source.at(1));
+            }
+            catch(const char *err)
+            {
+                std::cerr << err << std::endl;
+                return -1;
+            }
+
+            if(message.size() <= 0)
+            {
+                std::cerr << "Error on reading the Message" << std::endl;
+                return -1;
+            }
+
+            InfInt *cryptogram;
+            cryptogram = program.encryption(message);
+            std::string filename = source.at(1).substr(0, source.at(1).find("."));
+            try{
+                utils::writeToFile(cryptogram, filename.append(".cript"));
+            }
+            catch(const char *err)
+            {
+                std::cerr << err << std::endl;
+            }
+
+            delete(cryptogram);
+            return 0;
+        }
+        else if(flags[2])                   //Decrypting
+        {
+
+        }
+        if(flags[0])                   // Only Key Generation
+        {
+            RSA program();
+            program.generateKey();
+            program.saveKeys();
+            return 0;
         }
 
 

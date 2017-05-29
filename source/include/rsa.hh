@@ -10,9 +10,12 @@
 
 class RSA {
 public:
-	RSA(int bits);
+    RSA();
+    RSA(int bits);
 	RSA(InfInt p, InfInt q);
     ~RSA();
+    int loadPrivateKey(std::string filename);
+    int loadPublicKey(std::string filename);
     void generateKey();
 	InfInt getPublicKey() { return _publicKey; }
 	InfInt *encryption(const std::__cxx11::string &message);

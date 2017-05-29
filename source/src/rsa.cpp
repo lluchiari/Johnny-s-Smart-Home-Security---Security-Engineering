@@ -4,6 +4,10 @@
 #include <unistd.h>
 #include <string.h>
 
+RSA::RSA(){
+    _slice = NULL;
+}
+
 RSA::RSA(int bits) {
 	_p = MillerRabin::randomPrime(bits / 8);
 	usleep(1000000); // necessário para garantir primos diferentes entre si
@@ -21,6 +25,34 @@ RSA::RSA(InfInt p, InfInt q) {
 RSA::~RSA() {
 	if(_slice != NULL)
 		free(_slice);
+}
+
+int RSA::loadPublicKey(std::string filename)
+{
+    std::ifstream file(filename);
+    if(file.is_open())
+    {
+
+
+    }
+    else{
+        std::cerr << "Unable to open the file\n";
+        return -1;
+    }
+}
+
+int RSA::loadPrivateKey(std::string filename)
+{
+    std::ifstream file(filename);
+    if(file.is_open())
+    {
+
+
+    }
+    else{
+        std::cerr << "Error on load private key! Unable to open the file\n";
+        return -1;
+    }
 }
 
 void RSA::saveKeys() {

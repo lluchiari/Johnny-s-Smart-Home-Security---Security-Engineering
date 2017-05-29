@@ -1,5 +1,4 @@
 #include <include/utils.hh>
-#include <include/millerRabin.hh>
 
 namespace utils {
 
@@ -90,4 +89,41 @@ namespace utils {
 		}
 		return res;
 	}
+
+    std::string loadFromFile(std::string filename)
+    {
+        std::string message;
+        std::ifstream file(filename);
+        if(file.is_open())
+        {
+            /* Set the cursor to the end of the file */
+            file.seekg(0, std::ios::end);
+            /* Measure the length of the file and reserve */
+            message.reserve(file.tellg());
+            /* Return the cursor to the beggining of the file */
+            file.seekg(0, std::ios::beg);
+
+
+            message.assign((std::istreambuf_iterator<char>(file)),
+                        std::istreambuf_iterator<char>());
+        }
+        file.close();
+        else{
+            throw "Unable to open the file\n";
+        }
+        return message;
+    }
+
+    void writeToFile(InfInt *cryptogram, std::string filename)
+    {
+        std::ofstream file(filename);
+        if(file.is_open())
+        {
+            file << cryptogram->toString();
+        }
+        else{
+            throw "Unable to open the file\n";
+        }
+        file.close();
+    }
 }

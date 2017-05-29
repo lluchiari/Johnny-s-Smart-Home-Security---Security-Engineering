@@ -1,7 +1,10 @@
 #ifndef UTILS_HH
 #define UTILS_HH
 
+#include <iostream>
+#include <fstream>
 #include <include/InfInt.h>
+#include <include/millerRabin.hh>
 
 namespace utils {
 	/**
@@ -45,6 +48,10 @@ namespace utils {
 	 * @param len
 	 */
 	void genRandomString(char *s, const int len);
+
+    std::string loadFromFile(std::string filename);
+
+    void writeToFile(InfInt *cryptogram, std::string filename);
 }
 
 
