@@ -11,14 +11,15 @@
 #include <include/millerRabin.hh>
 
 #define PROGRAM_OPTIONS 4
-#define KEY_SIZE 100
+#define MIN_KEY_LENGTH 1
+#define MAX_KEY_LENGTH 1024
 
 
 static void show_usage(std::string name) {
     std::cerr << "Usage: " << name << " <option(s)> SOURCES\n"
               << "Options:\n"
               << "\t-h,--help\t\t\t\t\tShow this help message\n"
-              << "\t-g,--generate-key\t\t\t\tGenerates the key pair\n"
+              << "\t-g,--generate-key [KEY_SIZE]\t\t\t\tGenerates the key pair with the [KEY_SIZE] in bits.\n"
               << "\t-e,--encrypt [PUBLIC_KEY] [MESSAGE]\t\tEncrypt a [MESSAGE] file based on the [PUBLIC_KEY] file.\n"
               << "\t-d,--decrypt [PRIVATE_KEY] [CRYPTOGRAM]\t\tDecrypt a [CRYPTOGRAM] file based on the [PRIVATE_KEY] file.\n"
               << std::endl;
@@ -38,6 +39,9 @@ int main(int argc, char *argv[]) {
         bool flags[PROGRAM_OPTIONS];
         for(int i=0; i< PROGRAM_OPTIONS; i++){flags[i] = false;}
 
+        /* Variable to set the length of the keys */
+        int KeyResolution;
+
         std::vector<std::string> source;
         //std::string destination;
 
@@ -56,12 +60,16 @@ int main(int argc, char *argv[]) {
 			else if((arg == "-g")|| (arg == "--generate-key")) {
                 if (i + 1 < argc) {
                     /* Increment 'i' so we don't get the argument as the next argv[i]. */
-                    source.push_back(argv[++i]);                    // public key file
-                    source.push_back(argv[++i]);                   // message file
+                    KeyResolution = std::stoi(argv[++i], nullptr, 10);
+                    if((KeyResolution < MIN_KEY_LENGTH) && (KeyResolution > MAX_KEY_LENGTH))
+                    {
+                        std::cerr << "Error: Invalid Key Size!\n";
+                        return -1;
+                    }
                 }
                 /* Uh-oh, there was no argument to the destination option. */
                 else {
-                    std::cerr << "--encrypt option requires two argument. See --help for more information" << std::endl;
+                    std::cerr << "Missing Key Size argument. For more information see --help!" << std::endl;
                     return -1;
                 }
                 flags[0] = true;
@@ -104,7 +112,7 @@ int main(int argc, char *argv[]) {
 
         /* Generate key pair */
         if(flags[0]) {
-            RSA program(KEY_SIZE);
+            RSA program(KeyResolution);
             program.generateKey();
             if(program.saveKeys() == -1)
             {
