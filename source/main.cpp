@@ -17,8 +17,10 @@
 static void show_usage(std::string name) {
     std::cerr << "Usage: " << name << " <option(s)> SOURCES\n"
               << "Options:\n"
-              << "\t-h,--help\t\tShow this help message\n"
-              << "\t-d,--destination DESTINATION\tSpecify the destination path"
+              << "\t-h,--help\t\t\t\t\tShow this help message\n"
+              << "\t-g,--generate-key\t\t\t\tGenerates the key pair\n"
+              << "\t-e,--encrypt [PUBLIC_KEY] [MESSAGE]\t\tEncrypt a [MESSAGE] file based on the [PUBLIC_KEY] file.\n"
+              << "\t-d,--decrypt [PRIVATE_KEY] [CRYPTOGRAM]\t\tDecrypt a [CRYPTOGRAM] file based on the [PRIVATE_KEY] file.\n"
               << std::endl;
 }
 
