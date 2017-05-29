@@ -4,11 +4,12 @@
 #include <unistd.h>
 #include <string.h>
 
-RSA::RSA(){
-    _slice = NULL;
+RSA::RSA() {
+	_canGenerate = false;
 }
 
 RSA::RSA(int bits) {
+	_canGenerate = true;
 	_p = MillerRabin::randomPrime(bits / 8);
 	usleep(1000000); // necessário para garantir primos diferentes entre si
 	_q = MillerRabin::randomPrime(bits / 8);
@@ -17,6 +18,7 @@ RSA::RSA(int bits) {
 }
 
 RSA::RSA(InfInt p, InfInt q) {
+	_canGenerate = true;
 	_p = p;
 	_q = q;
 	_slice =  NULL;
@@ -27,30 +29,56 @@ RSA::~RSA() {
 		free(_slice);
 }
 
-int RSA::loadPublicKey(std::string filename)
-{
+int RSA::loadPublicKey(std::string filename) {
     std::ifstream file(filename);
-    if(file.is_open())
-    {
-
-
-    }
-    else{
-        std::cerr << "Unable to open the file\n";
+	std::string line, key, mod;
+	if(file.is_open()) {
+		std::getline(file, line);
+		std::size_t found = line.find("Public");
+		if(found != std::string::npos) {
+			// A chave privada está no arquivo
+			while(std::getline(file, line) && line.find("Mod") == std::string::npos) { // Lendo chave pública
+				key.append(line);
+			}
+			while(std::getline(file, line)) { // Lendo módulo
+				mod.append(line);
+			}
+			_publicKey = key;
+			_modulus = mod;
+		} else {
+			std::cerr << "Error on load public key! Corrupt file\n";
+			return -2;
+		}
+	} else {
+		std::cerr << "Error on load public key! Unable to open file\n";
         return -1;
     }
 }
 
-int RSA::loadPrivateKey(std::string filename)
-{
+int RSA::loadPrivateKey(std::string filename) {
     std::ifstream file(filename);
-    if(file.is_open())
-    {
-
-
-    }
-    else{
-        std::cerr << "Error on load private key! Unable to open the file\n";
+	std::string line;
+	std::string key;
+	std::string mod;
+	if(file.is_open()) {
+		std::getline(file, line);
+		std::size_t found = line.find("Private");
+		if(found != std::string::npos) {
+			// A chave privada está no arquivo
+			while(std::getline(file, line) && line.find("Mod") == std::string::npos) { // Lendo chave privada
+				key.append(line);
+			}
+			while(std::getline(file, line)) { // Lendo módulo
+				mod.append(line);
+			}
+			_privateKey = key;
+			_modulus = mod;
+		} else {
+			std::cerr << "Error on load private key! Corrupt file\n";
+			return -2;
+		}
+	} else {
+		std::cerr << "Error on load private key! Unable to open file\n";
         return -1;
     }
 }
@@ -59,9 +87,9 @@ void RSA::saveKeys() {
 	std::ofstream keysFile;
 	keysFile.open("keys.txt");
 	if(keysFile.is_open()) {
-		keysFile << "Private: " << _privateKey << "\n";
-		keysFile << "Public: " << _publicKey << "\n";
-		keysFile << "Modulus: " << _modulus << "\n";
+		keysFile << "Private:\n" << _privateKey << "\n";
+		keysFile << "Public:\n" << _publicKey << "\n";
+		keysFile << "Modulus:\n" << _modulus << "\n";
 		keysFile.close();
 	}
 }
@@ -74,7 +102,8 @@ void RSA::saveKeys() {
  * @variable d, expoente da fórmula da chave privada
  */
 void RSA::generateKey() {
-
+	if(!_canGenerate) /// Adicionar retorno de erro!
+		return;
 	/* Calculating Parameters based on generated primes */
 	InfInt n, x, e;
 	std::pair<InfInt, InfInt> privValues;
@@ -103,18 +132,13 @@ void RSA::generateKey() {
 InfInt *RSA::encryption(const std::__cxx11::string &message) {
 	InfInt *cryptogram;
 	std::string crypto;
-//    std::cout << "Encrypting: \"" << message << "\"" << std::endl;
 
     InfInt aux;
 	_slice = (int*) malloc(message.size() * sizeof(int));
-//	std::cout << "Encrypting!" << std::endl;
 	for(unsigned int i=0; i < message.size(); i++) {
 		aux = message[i];
-//		std::cout << "Aux before mod: " << aux << std::endl;
 		aux = utils::modPow(aux, _publicKey, _modulus);
-//		std::cout << "Aux after mod: " << aux.toString() << '\n';
 		_slice[i] = aux.numberOfDigits();
-//		std::cout << "Slice value: " << _slice[i] << std::endl;
 		crypto += aux.toString();
     }
 	cryptogram = new InfInt(crypto);
@@ -123,15 +147,10 @@ InfInt *RSA::encryption(const std::__cxx11::string &message) {
 
 void RSA::decryption(std::__cxx11::string &dec, InfInt *criptogram) {
 	std::string interm = criptogram->toString();
-//	std::cout << "Decrypting!" << std::endl;
 	std::cout << interm << std::endl;
 	for(unsigned int i = 0, j = 0; i < criptogram->numberOfDigits(); i += _slice[j], j++) {
-//		std::cout << "i = " << i << " j = " << j << " i + slice: " << i + _slice[j] << std::endl;
 		InfInt aux = interm.substr(i, _slice[j]);
-//		std::cout << "Slice value: " << _slice[j] << std::endl;
-//		std::cout << "Aux substring: " << aux.toString() << std::endl;
 		aux = utils::modPow(aux, _privateKey, _modulus);
-//		std::cout << "Aux after pow: " << aux.toString() << std::endl;
 		dec += (char) aux.toInt();
 	}
 }

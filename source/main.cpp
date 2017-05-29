@@ -10,10 +10,10 @@
 #include <include/millerRabin.hh>
 
 #define PROGRAM_OPTIONS 4
+#define KEY_SIZE 10
 
 
-static void show_usage(std::string name)
-{
+static void show_usage(std::string name) {
     std::cerr << "Usage: " << name << " <option(s)> SOURCES\n"
               << "Options:\n"
               << "\t-h,--help\t\tShow this help message\n"
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
         /* Checking Command Line Arguments */
         if (argc < 2) {
             std::cout << argv[0] << " invalid option!\nTry '"<< argv[0]
-                                 << " --help' for more informatio.\n";
+								 << " --help' for more information.\n";
             return -1;
         }
 
@@ -49,15 +49,13 @@ int main(int argc, char *argv[]) {
                 show_usage(argv[0]);
                 return 0;
             }
-            /* Command GERATE KEY --> flags[0] */
-            else if((arg == "-g")|| (arg == "--generate-key"))
-            {
+			/* Command GENERATE KEY --> flags[0] */
+			else if((arg == "-g")|| (arg == "--generate-key")) {
                 //numero de bits
                 flags[0] = true;
             }
             /* Command ENCRYPT --> flags[1] */
-            else if((arg == "-e")|| (arg == "--encrypt"))
-            {
+			else if((arg == "-e")|| (arg == "--encrypt")) {
                 /* Make sure we aren't at the end of argv! */
                 if (i + 2 < argc) {
                     /* Increment 'i' so we don't get the argument as the next argv[i]. */
@@ -65,29 +63,25 @@ int main(int argc, char *argv[]) {
                     source.at(1) = argv[i++];                   // message file
                 }
                 /* Uh-oh, there was no argument to the destination option. */
-                else
-                {
+				else {
                     std::cerr << "--encrypt option requires one argument." << std::endl;
                     return -1;
                 }
                 flags[1] = true;
             }
             /* Command DECRYPT --> flags[2] */
-            else if((arg == "-d")|| (arg == "--decrypt"))
-            {
+			else if((arg == "-d")|| (arg == "--decrypt")) {
                 flags[2] = true;
             }
             /* Command ENCRYPT GENERATE KEY --> flags[2] */
-            else if((arg == "-eak")|| (arg == "--encrypt-assimetric-key"))
-            {
+			else if((arg == "-eak")|| (arg == "--encrypt-assimetric-key")) {
 
             }
             /* Command GUI --> flags[2] */
-            else if((arg == "-gui")|| (arg == "--graphical"))
-            {
+			else if((arg == "-gui")|| (arg == "--graphical")) {
 
             }
-            else{
+			else {
                 show_usage(argv[0]);
                 return -1;
             }
@@ -95,62 +89,53 @@ int main(int argc, char *argv[]) {
 
 
         /* Flags Parser */
-        if(flags[1])                   //Crypting
-        {
-            RSA program();
+		if(flags[1]) {                   //Crypting
+			RSA program(KEY_SIZE);
+			std::string message;
 
             /* Check if have to generate the key */
-            if(flags[0])
-            {
+			if(flags[0]) {
                 program.generateKey();
             }
-            else
-            {
-                if(program.loadPublicKey(source.at(0)) == -1)
-                {
-                    std::cerr << "Error on loading public key" << std::endl;
+			else {
+				if(program.loadPublicKey(source.at(0)) == -1) {
+					std::cerr << "Error loading public key" << std::endl;
                     return -1;
                 }
             }
 
-            try{
-                std::string message = utils::loadFromFile(source.at(1));
+			try {
+				message = utils::loadFromFile(source.at(1));
             }
-            catch(const char *err)
-            {
+			catch(const char *err) {
                 std::cerr << err << std::endl;
                 return -1;
             }
 
-            if(message.size() <= 0)
-            {
-                std::cerr << "Error on reading the Message" << std::endl;
+			if(message.size() <= 0) {
+				std::cerr << "Error reading the Message" << std::endl;
                 return -1;
             }
 
             InfInt *cryptogram;
             cryptogram = program.encryption(message);
             std::string filename = source.at(1).substr(0, source.at(1).find("."));
-            try{
+			try {
                 utils::writeToFile(cryptogram, filename.append(".cript"));
             }
-            catch(const char *err)
-            {
+			catch(const char *err) {
                 std::cerr << err << std::endl;
             }
 
             delete(cryptogram);
             return 0;
         }
-        else if(flags[2])                   //Decrypting
-        {
+		else if(flags[2]) {                   //Decrypting
 
         }
-        if(flags[0])                   // Only Key Generation
-        {
-            RSA program();
+		if(flags[0]) {                   // Only Key Generation
+			RSA program(KEY_SIZE);
             program.generateKey();
-            program.saveKeys();
             return 0;
         }
 
@@ -170,9 +155,8 @@ int main(int argc, char *argv[]) {
 //        }
 //        return move(sources, destination);
 //    }
-#endif
+#else
 
-#ifdef DEBUG
 //    InfInt p = "48851171585780512151872007066472568695045543717924031431249006254046862338909894217562808709546250056289399470894742242014198835030971020078279856090415247";
 //    InfInt q = "17156034090577232334004270995267972777289456282615237656675311020498416361101565288066643474796857699447787935485481067506985762542608378284942492718479329";
     //InfInt pq = "30849821653687123463303337813366340344631999834490732265076505139386759060955395380528245195629759344443748279939181018527300477332078364394207345648412271";

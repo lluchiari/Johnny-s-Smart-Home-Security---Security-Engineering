@@ -10,7 +10,7 @@
 
 class RSA {
 public:
-    RSA();
+	RSA();
     RSA(int bits);
 	RSA(InfInt p, InfInt q);
     ~RSA();
@@ -27,6 +27,7 @@ private:
 	InfInt _modulus;
 	InfInt _p, _q;
 	int *_slice;
+	bool _canGenerate;
 
 	void saveKeys();
 };
