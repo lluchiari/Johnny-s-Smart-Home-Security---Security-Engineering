@@ -58,6 +58,8 @@ void RSA::generateKey() {
 		e += 2;
 		utils::gcd(privValues, e, x);
 	}
+	if(privValues.first < 0)
+		privValues.first += n;
 	_privateKey = privValues.first;
 	_publicKey = e;
 	_modulus = n;
