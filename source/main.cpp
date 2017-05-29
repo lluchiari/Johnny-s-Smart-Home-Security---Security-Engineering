@@ -54,7 +54,16 @@ int main(int argc, char *argv[]) {
             }
 			/* Command GENERATE KEY --> flags[0] */
 			else if((arg == "-g")|| (arg == "--generate-key")) {
-                //numero de bits
+                if (i + 1 < argc) {
+                    /* Increment 'i' so we don't get the argument as the next argv[i]. */
+                    source.push_back(argv[++i]);                    // public key file
+                    source.push_back(argv[++i]);                   // message file
+                }
+                /* Uh-oh, there was no argument to the destination option. */
+                else {
+                    std::cerr << "--encrypt option requires two argument. See --help for more information" << std::endl;
+                    return -1;
+                }
                 flags[0] = true;
             }
             /* Command ENCRYPT --> flags[1] */
@@ -92,22 +101,31 @@ int main(int argc, char *argv[]) {
 
 
         /* Flags Parser */
-        if(flags[1])                                    //Crypting
+
+        /* Generate key pair */
+        if(flags[0]) {
+            RSA program(KEY_SIZE);
+            program.generateKey();
+            if(program.saveKeys() == -1)
+            {
+                std::cerr << "Error on opening key files\n";
+                return -1;
+            }
+            return 0;
+        }
+        /* Encrypting */
+        else if(flags[1])
         {
-			RSA program(KEY_SIZE);
+            RSA program;
 			std::string message;
 
-            /* Check if have to generate the key */
-			if(flags[0]) {
-                program.generateKey();
-            }
-			else {
-				if(program.loadPublicKey(source.at(0)) == -1) {
-					std::cerr << "Error loading public key" << std::endl;
-                    return -1;
-                }
+            /* Load the key */
+            if(program.loadPublicKey(source.at(0)) < 0) {
+                std::cerr << "Error loading public key" << std::endl;
+                return -1;
             }
 
+            /* Loading the message */
 			try {
 				message = utils::loadFromFile(source.at(1));
             }
@@ -116,12 +134,15 @@ int main(int argc, char *argv[]) {
                 return -1;
             }
 
+            /* Verify if the message is not empty */
 			if(message.size() <= 0) {
 				std::cerr << "Error reading the Message" << std::endl;
                 return -1;
             }
 
             InfInt *cryptogram;
+
+            /* Proccess the encryptation process itself */
             cryptogram = program.encryption(message);
             std::string filename = source.at(1).substr(0, source.at(1).find("."));
 			try {
@@ -134,40 +155,12 @@ int main(int argc, char *argv[]) {
             delete(cryptogram);
             return 0;
         }
-		else if(flags[2]) {                   //Decrypting
+        /* Decrypting */
+        else if(flags[2]) {
 
-        }
-        else if(flags[0]) {                   // Only Key Generation and file saving
-			RSA program(KEY_SIZE);
-            program.generateKey();
-            if(program.saveKeys() == -1)
-            {
-                std::cerr << "Error on opening key files\n";
-                return -1;
-            }
-            return 0;
-        }
-        else
-        {
 
         }
 
-
-
-
-//            else if ((arg == "-d") || (arg == "--destination")) {
-//                if (i + 1 < argc) { // Make sure we aren't at the end of argv!
-//                    destination = argv[i++]; // Increment 'i' so we don't get the argument as the next argv[i].
-//                } else { // Uh-oh, there was no argument to the destination option.
-//                      std::cerr << "--destination option requires one argument." << std::endl;
-//                    return 1;
-//                }
-//            } else {
-//                sources.push_back(argv[i]);
-//            }
-//        }
-//        return move(sources, destination);
-//    }
 #else
 
 //    InfInt p = "48851171585780512151872007066472568695045543717924031431249006254046862338909894217562808709546250056289399470894742242014198835030971020078279856090415247";

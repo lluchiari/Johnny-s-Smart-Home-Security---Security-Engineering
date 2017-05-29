@@ -13,7 +13,7 @@ RSA::RSA(int bits) {
 	_p = MillerRabin::randomPrime(bits / 8);
 	usleep(1000000); // necessário para garantir primos diferentes entre si
 	_q = MillerRabin::randomPrime(bits / 8);
-	std::cout << "P: " << _p << "\nQ: " << _q << std::endl;
+//    std::cout << "P: " << _p << "\nQ: " << _q << std::endl;
 	_slice = NULL;
 }
 
@@ -37,15 +37,18 @@ int RSA::loadPublicKey(std::string filename) {
 		std::size_t found = line.find("Public");
 		if(found != std::string::npos) {
 			// A chave privada está no arquivo
-			while(std::getline(file, line) && line.find("Mod") == std::string::npos) { // Lendo chave pública
+            while(std::getline(file, line) && line.find("Modulus") == std::string::npos) { // Lendo chave pública
 				key.append(line);
 			}
 			while(std::getline(file, line)) { // Lendo módulo
 				mod.append(line);
 			}
+            std::cout << "Key-_: " <<key << "\n";
+            std::cout << "Modulus__: " << mod << "\n";
 			_publicKey = key;
 			_modulus = mod;
-		} else {
+        }
+        else {
 			std::cerr << "Error on load public key! Corrupt file\n";
 			return -2;
 		}
@@ -63,15 +66,17 @@ int RSA::loadPrivateKey(std::string filename) {
 	std::string mod;
 	if(file.is_open()) {
 		std::getline(file, line);
-		std::size_t found = line.find("Private");
+        std::size_t found = line.find("Private");
 		if(found != std::string::npos) {
 			// A chave privada está no arquivo
-			while(std::getline(file, line) && line.find("Mod") == std::string::npos) { // Lendo chave privada
+            while(std::getline(file, line) && line.find("Modulus") == std::string::npos) { // Lendo chave privada
 				key.append(line);
 			}
 			while(std::getline(file, line)) { // Lendo módulo
 				mod.append(line);
 			}
+            std::cout << "Key: " <<key << "\n";
+            std::cout << "Modulus: " << mod << "\n";
 			_privateKey = key;
 			_modulus = mod;
 		} else {
