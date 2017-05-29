@@ -53,6 +53,7 @@ int RSA::loadPublicKey(std::string filename) {
 		std::cerr << "Error on load public key! Unable to open file\n";
         return -1;
     }
+    return 1;
 }
 
 int RSA::loadPrivateKey(std::string filename) {
@@ -81,17 +82,40 @@ int RSA::loadPrivateKey(std::string filename) {
 		std::cerr << "Error on load private key! Unable to open file\n";
         return -1;
     }
+    return 1;
 }
 
-void RSA::saveKeys() {
-	std::ofstream keysFile;
-	keysFile.open("keys.txt");
-	if(keysFile.is_open()) {
-		keysFile << "Private:\n" << _privateKey << "\n";
-		keysFile << "Public:\n" << _publicKey << "\n";
-		keysFile << "Modulus:\n" << _modulus << "\n";
-		keysFile.close();
+int RSA::saveKeys() {
+    std::ofstream pubKey, privKey;
+
+    /* Opening Public Key File */
+    pubKey.open("keys.pub");
+    if(pubKey.is_open()) {
+        pubKey << "Public:\n" << _publicKey << "\n";
+        pubKey << "Modulus:\n" << _modulus << "\n";
+        pubKey.close();
 	}
+    else
+    {
+        std::cerr << "Error on opening file\n";
+        return -1;
+    }
+    privKey.open("keys.pri");
+
+    /* Opening Private Key File */
+    if(privKey.is_open()) {
+        privKey << "Private:\n" << _privateKey << "\n";
+        privKey << "Modulus:\n" << _modulus << "\n";
+        privKey.close();
+    }
+    else
+    {
+        std::cerr << "Error on opening file\n";
+        return -1;
+    }
+    pubKey.close();
+    privKey.close();
+    return 1;
 }
 
 /**

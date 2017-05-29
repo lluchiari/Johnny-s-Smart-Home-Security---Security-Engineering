@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <vector>
 #include <string>
@@ -10,7 +11,7 @@
 #include <include/millerRabin.hh>
 
 #define PROGRAM_OPTIONS 4
-#define KEY_SIZE 10
+#define KEY_SIZE 100
 
 
 static void show_usage(std::string name) {
@@ -59,12 +60,12 @@ int main(int argc, char *argv[]) {
                 /* Make sure we aren't at the end of argv! */
                 if (i + 2 < argc) {
                     /* Increment 'i' so we don't get the argument as the next argv[i]. */
-                    source.at(0) = argv[i++];                   // public key file
-                    source.at(1) = argv[i++];                   // message file
+                    source.push_back(argv[++i]);                    // public key file
+                    source.push_back(argv[++i]);                   // message file
                 }
                 /* Uh-oh, there was no argument to the destination option. */
 				else {
-                    std::cerr << "--encrypt option requires one argument." << std::endl;
+                    std::cerr << "--encrypt option requires two argument. See --help for more information" << std::endl;
                     return -1;
                 }
                 flags[1] = true;
@@ -89,7 +90,8 @@ int main(int argc, char *argv[]) {
 
 
         /* Flags Parser */
-		if(flags[1]) {                   //Crypting
+        if(flags[1])                                    //Crypting
+        {
 			RSA program(KEY_SIZE);
 			std::string message;
 
@@ -133,10 +135,19 @@ int main(int argc, char *argv[]) {
 		else if(flags[2]) {                   //Decrypting
 
         }
-		if(flags[0]) {                   // Only Key Generation
+        else if(flags[0]) {                   // Only Key Generation and file saving
 			RSA program(KEY_SIZE);
             program.generateKey();
+            if(program.saveKeys() == -1)
+            {
+                std::cerr << "Error on opening key files\n";
+                return -1;
+            }
             return 0;
+        }
+        else
+        {
+
         }
 
 

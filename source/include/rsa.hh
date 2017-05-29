@@ -20,6 +20,7 @@ public:
 	InfInt getPublicKey() { return _publicKey; }
 	InfInt *encryption(const std::__cxx11::string &message);
 	void decryption(std::__cxx11::string &dec, InfInt *criptogram);
+    int saveKeys();
 
 private:
 	InfInt _privateKey;
@@ -28,8 +29,6 @@ private:
 	InfInt _p, _q;
 	int *_slice;
 	bool _canGenerate;
-
-	void saveKeys();
 };
 
 #endif
