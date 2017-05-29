@@ -7,6 +7,7 @@ TARGET = johnnysSHS
 CONFIG += console
 CONFIG -= app_bundle
 CCFLAG += -DINFINT_USE_EXCEPTIONS
+#QMAKE_CXXFLAGS += -DDEBUG
 
 TEMPLATE = app
 
