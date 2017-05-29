@@ -23,7 +23,7 @@ public:
     InfInt getModulus() { return _modulus; }
 
     InfInt *encryption(const std::__cxx11::string &message);
-	void decryption(std::__cxx11::string &dec, InfInt *criptogram);
+    void decryption(std::string &dec, InfInt *criptogram);
     int saveKeys();
 
 private:

@@ -53,7 +53,9 @@ int main(int argc, char *argv[]) {
 
             /* Command HELP --> Without flags (it's a sovereign command)*/
             if ((arg == "-h") || (arg == "--help")) {
-                show_usage(argv[0]);
+                std::string aux = argv[0];
+                std::string filename = aux.substr(0, aux.find("."));
+                show_usage(filename);
                 return 0;
             }
 			/* Command GENERATE KEY --> flags[0] */
@@ -91,6 +93,17 @@ int main(int argc, char *argv[]) {
             }
             /* Command DECRYPT --> flags[2] */
 			else if((arg == "-d")|| (arg == "--decrypt")) {
+                /* Make sure we aren't at the end of argv! */
+                if (i + 2 < argc) {
+                    /* Increment 'i' so we don't get the argument as the next argv[i]. */
+                    source.push_back(argv[++i]);                    // private key file
+                    source.push_back(argv[++i]);                   // cryptogram file
+                }
+                /* Uh-oh, there was no argument to the destination option. */
+                else {
+                    std::cerr << "--decrypt option requires two argument. See --help for more information" << std::endl;
+                    return -1;
+                }
                 flags[2] = true;
             }
             /* Command ENCRYPT GENERATE KEY --> flags[2] */
@@ -154,7 +167,8 @@ int main(int argc, char *argv[]) {
             cryptogram = program.encryption(message);
             std::string filename = source.at(1).substr(0, source.at(1).find("."));
 			try {
-                utils::writeToFile(cryptogram, filename.append(".cript"));
+                std::string aux = cryptogram->toString();
+                utils::writeToFile(aux, filename.append(".cript"));
             }
 			catch(const char *err) {
                 std::cerr << err << std::endl;
@@ -165,8 +179,44 @@ int main(int argc, char *argv[]) {
         }
         /* Decrypting */
         else if(flags[2]) {
+            RSA program;
+            std::string aux;
 
+            /* Load the key */
+            if(program.loadPrivateKey(source.at(0)) < 0) {
+                std::cerr << "Error loading public key" << std::endl;
+                return -1;
+            }
 
+            /* Loading the cryptogram */
+            try {
+                aux = utils::loadFromFile(source.at(1));
+            }
+            catch(const char *err) {
+                std::cerr << err << std::endl;
+                return -1;
+            }
+
+            InfInt cryptogram = aux;
+
+            /* Verify if the cryptogram is not empty */
+            if(cryptogram.size() <= 0) {
+                std::cerr << "Error reading the cryptogram" << std::endl;
+                return -1;
+            }
+
+            std::string message;
+
+            /* Proccess the encryptation process itself */
+            program.decryption(message, &cryptogram);
+            std::string filename = source.at(1).substr(0, source.at(1).find("."));
+            try {
+                utils::writeToFile(message, filename.append(".txt"));
+            }
+            catch(const char *err) {
+                std::cerr << err << std::endl;
+            }
+            return 0;
         }
 
 #else

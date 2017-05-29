@@ -174,7 +174,7 @@ InfInt *RSA::encryption(const std::__cxx11::string &message) {
 	return cryptogram;
 }
 
-void RSA::decryption(std::__cxx11::string &dec, InfInt *criptogram) {
+void RSA::decryption(std::string &dec, InfInt *criptogram) {
 	std::string interm = criptogram->toString();
 	std::cout << interm << std::endl;
 	for(unsigned int i = 0, j = 0; i < criptogram->numberOfDigits(); i += _slice[j], j++) {

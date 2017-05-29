@@ -112,12 +112,12 @@ namespace utils {
         return message;
     }
 
-    void writeToFile(InfInt *cryptogram, std::string filename)
+    void writeToFile(std::string *info, std::string filename)
     {
         std::ofstream file(filename);
         if(file.is_open())
         {
-            file << cryptogram->toString();
+            file << info;
         }
         else{
             throw "Unable to open the file\n";
