@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
             /* Command HELP --> Without flags (it's a sovereign command)*/
             if ((arg == "-h") || (arg == "--help")) {
                 std::string aux = argv[0];
-                std::string filename = aux.substr(0, aux.find("."));
+                std::string filename = aux.substr(aux.find("/")+1, aux.find(" "));
                 show_usage(filename);
                 return 0;
             }
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
             std::string filename = source.at(1).substr(0, source.at(1).find("."));
 			try {
                 std::string aux = cryptogram->toString();
-                utils::writeToFile(aux, filename.append(".cript"));
+                //utils::writeToFile(aux, filename.append(".cript"));
             }
 			catch(const char *err) {
                 std::cerr << err << std::endl;
@@ -211,7 +211,7 @@ int main(int argc, char *argv[]) {
             program.decryption(message, &cryptogram);
             std::string filename = source.at(1).substr(0, source.at(1).find("."));
             try {
-                utils::writeToFile(message, filename.append(".txt"));
+                //utils::writeToFile(message, filename.append(".txt"));
             }
             catch(const char *err) {
                 std::cerr << err << std::endl;
