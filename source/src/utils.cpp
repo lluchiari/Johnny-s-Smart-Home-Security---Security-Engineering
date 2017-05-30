@@ -1,4 +1,4 @@
-#include <include/utils.hh>
+#include "../include/utils.hh"
 
 namespace utils {
 
@@ -112,11 +112,9 @@ namespace utils {
         return message;
     }
 
-    void writeToFile(std::string *info, std::string filename)
-    {
+	void writeToFile(std::string &info, std::string filename) {
         std::ofstream file(filename);
-        if(file.is_open())
-        {
+		if(file.is_open()) {
             file << info;
         }
         else{

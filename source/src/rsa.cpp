@@ -1,4 +1,4 @@
-#include <include/rsa.hh>
+#include "../include/rsa.hh"
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
@@ -10,23 +10,20 @@ RSA::RSA() {
 
 RSA::RSA(int bits) {
 	_canGenerate = true;
-	_p = MillerRabin::randomPrime(bits / 8);
+	_p = MillerRabin::randomPrime(bits / 16);
 	usleep(1000000); // necessário para garantir primos diferentes entre si
-	_q = MillerRabin::randomPrime(bits / 8);
+	_q = MillerRabin::randomPrime(bits / 16);
 //    std::cout << "P: " << _p << "\nQ: " << _q << std::endl;
-	_slice = NULL;
 }
 
 RSA::RSA(InfInt p, InfInt q) {
 	_canGenerate = true;
 	_p = p;
 	_q = q;
-	_slice =  NULL;
 }
 
 RSA::~RSA() {
-	if(_slice != NULL)
-		free(_slice);
+
 }
 
 int RSA::loadPublicKey(std::string filename) {
@@ -43,8 +40,8 @@ int RSA::loadPublicKey(std::string filename) {
 			while(std::getline(file, line)) { // Lendo módulo
 				mod.append(line);
 			}
-            std::cout << "Key-_: " <<key << "\n";
-            std::cout << "Modulus__: " << mod << "\n";
+//            std::cout << "Key-_: " <<key << "\n";
+//            std::cout << "Modulus__: " << mod << "\n";
 			_publicKey = key;
 			_modulus = mod;
         }
@@ -75,8 +72,8 @@ int RSA::loadPrivateKey(std::string filename) {
 			while(std::getline(file, line)) { // Lendo módulo
 				mod.append(line);
 			}
-            std::cout << "Key: " <<key << "\n";
-            std::cout << "Modulus: " << mod << "\n";
+//            std::cout << "Key: " <<key << "\n";
+//            std::cout << "Modulus: " << mod << "\n";
 			_privateKey = key;
 			_modulus = mod;
 		} else {
@@ -123,15 +120,8 @@ int RSA::saveKeys() {
     return 1;
 }
 
-/**
- * @brief RSA::generateKey método de geração de chaves pública e privada
- * @variable n, módulo da chave
- * @variable x, totiente de n
- * @variable e, expoente da fórmula da chave pública
- * @variable d, expoente da fórmula da chave privada
- */
 void RSA::generateKey() {
-	if(!_canGenerate) /// Adicionar retorno de erro!
+	if(!_canGenerate)
 		return;
 	/* Calculating Parameters based on generated primes */
 	InfInt n, x, e;
@@ -153,33 +143,57 @@ void RSA::generateKey() {
 	_privateKey = privValues.first;
 	_publicKey = e;
 	_modulus = n;
-	std::cout << "Private key: d = " << _privateKey.toString() << "\nPublic key: e = " << _publicKey.toString() << std::endl;
-	std::cout << "Modulus: n = " << _modulus.toString() << std::endl;
+//	std::cout << "Private key: d = " << _privateKey.toString() << "\nPublic key: e = " << _publicKey.toString() << std::endl;
+//	std::cout << "Modulus: n = " << _modulus.toString() << std::endl;
 	saveKeys();
 }
 
-InfInt *RSA::encryption(const std::__cxx11::string &message) {
+InfInt *RSA::encryption(const std::__cxx11::string &message, std::__cxx11::string filename) {
 	InfInt *cryptogram;
 	std::string crypto;
-
+	filename.append(".crypt");
     InfInt aux;
-	_slice = (int*) malloc(message.size() * sizeof(int));
 	for(unsigned int i=0; i < message.size(); i++) {
 		aux = message[i];
 		aux = utils::modPow(aux, _publicKey, _modulus);
-		_slice[i] = aux.numberOfDigits();
+		_slice.push_back(aux.numberOfDigits());
 		crypto += aux.toString();
     }
+
+	std::string info;
+	for(int i : _slice) {
+		info += std::to_string(i);
+		info += ",";
+	}
+	info.replace(info.size() - 1, 1, "\n");
+	info += crypto;
+	utils::writeToFile(info, filename);
 	cryptogram = new InfInt(crypto);
 	return cryptogram;
 }
 
-void RSA::decryption(std::string &dec, InfInt *criptogram) {
-	std::string interm = criptogram->toString();
+void RSA::decryption(std::string &dec, std::__cxx11::string &filedata) {
+	InfInt criptogram = interpretCypherFile(filedata);
+	std::string interm = criptogram.toString();
 	std::cout << interm << std::endl;
-	for(unsigned int i = 0, j = 0; i < criptogram->numberOfDigits(); i += _slice[j], j++) {
-		InfInt aux = interm.substr(i, _slice[j]);
+	for(unsigned int i = 0, j = 0; i < criptogram.numberOfDigits(); i += _slice.at(j), j++) {
+		InfInt aux = interm.substr(i, _slice.at(j));
 		aux = utils::modPow(aux, _privateKey, _modulus);
 		dec += (char) aux.toInt();
 	}
+}
+
+InfInt RSA::interpretCypherFile(std::__cxx11::string &data) {
+	std::string line;
+	std::istringstream dt(data);
+	std::getline(dt, line);
+	std::istringstream slices(line);
+	std::string slice;
+	while(std::getline(slices, slice, ',')) {
+		InfInt aux = slice;
+		_slice.push_back(aux.toInt());
+	}
+	std::getline(dt, line);
+	InfInt crypt = line;
+	return crypt;
 }

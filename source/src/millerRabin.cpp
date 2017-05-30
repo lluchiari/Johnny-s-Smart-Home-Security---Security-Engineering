@@ -1,5 +1,5 @@
-#include <include/millerRabin.hh>
-#include <include/utils.hh>
+#include "../include/millerRabin.hh"
+#include "../include/utils.hh"
 
 namespace MillerRabin {
 

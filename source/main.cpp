@@ -5,14 +5,14 @@
 #include <string>
 #include <exception>
 #include <unistd.h>
-#include <include/rsa.hh>
-#include <include/InfInt.h>
-#include <include/utils.hh>
-#include <include/millerRabin.hh>
+#include "include/rsa.hh"
+#include "include/InfInt.h"
+#include "include/utils.hh"
+#include "include/millerRabin.hh"
 
 #define PROGRAM_OPTIONS 4
-#define MIN_KEY_LENGTH 1
-#define MAX_KEY_LENGTH 1024
+#define MIN_KEY_LENGTH 16
+#define MAX_KEY_LENGTH 4096
 
 
 static void show_usage(std::string name) {
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
             /* Command HELP --> Without flags (it's a sovereign command)*/
             if ((arg == "-h") || (arg == "--help")) {
                 std::string aux = argv[0];
-                std::string filename = aux.substr(0, aux.find("."));
+				std::string filename = aux.substr(aux.find("/")+1, aux.find(" "));
                 show_usage(filename);
                 return 0;
             }
@@ -164,11 +164,9 @@ int main(int argc, char *argv[]) {
             InfInt *cryptogram;
 
             /* Proccess the encryptation process itself */
-            cryptogram = program.encryption(message);
-            std::string filename = source.at(1).substr(0, source.at(1).find("."));
+			std::string filename = source.at(1).substr(0, source.at(1).find("."));
 			try {
-                std::string aux = cryptogram->toString();
-                utils::writeToFile(aux, filename.append(".cript"));
+				cryptogram = program.encryption(message, filename);
             }
 			catch(const char *err) {
                 std::cerr << err << std::endl;
@@ -197,18 +195,10 @@ int main(int argc, char *argv[]) {
                 return -1;
             }
 
-            InfInt cryptogram = aux;
-
-            /* Verify if the cryptogram is not empty */
-            if(cryptogram.size() <= 0) {
-                std::cerr << "Error reading the cryptogram" << std::endl;
-                return -1;
-            }
-
             std::string message;
 
             /* Proccess the encryptation process itself */
-            program.decryption(message, &cryptogram);
+			program.decryption(message, aux);
             std::string filename = source.at(1).substr(0, source.at(1).find("."));
             try {
                 utils::writeToFile(message, filename.append(".txt"));
@@ -230,13 +220,13 @@ int main(int argc, char *argv[]) {
     //InfInt p = "154725368117940698788029053217798887175214759640744378541226187572025414018010181004439221967045836431399408128455038077191873040800659709605935985084899530753233413028684685152782225472103307582636553459294347054889505097412841939917674271786860290832603626651911507603833436210130113055877637427181462712487";
     //InfInt q = "119066337892944497659274447260782976472330933532973728367702305819889080235208144711826032422469638636165988175365563491392888258760951411989700747304780091452449377384804618419099627425891439127996909654253632370887891785795670014023990698293616870256764888928945330566936192067895773774570307726662717965503";
 
-	RSA test(1024);
+	RSA test(32);
     test.generateKey();
 //	std::string message = "Eu tinha uma galinha que se chamava Mary Lu.";
 //	std::string message = "A z";
 	std::string message = "Eu estou testando a ?Criptografia!%!@#$%*()RSA! |\\/:;^~[]{}+=";
 	InfInt *cryptogram;
-	cryptogram = test.encryption(message);
+	cryptogram = test.encryption(message, "cypher");
 
 	std::cout << "Message: "<< message << std::endl << "Cryptogram: " << cryptogram->toString() << std::endl;
 	std::string nMessage;

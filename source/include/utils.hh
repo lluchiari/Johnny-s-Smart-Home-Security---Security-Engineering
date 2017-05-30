@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <fstream>
-#include <include/InfInt.h>
-#include <include/millerRabin.hh>
+#include "InfInt.h"
+#include "millerRabin.hh"
 
 namespace utils {
 	/**
@@ -49,9 +49,19 @@ namespace utils {
 	 */
 	void genRandomString(char *s, const int len);
 
+	/**
+	 * @brief loadFromFile function to read all contents of received file
+	 * @param filename name of the file to be read
+	 * @return contents of the file
+	 */
     std::string loadFromFile(std::string filename);
 
-    void writeToFile(std::string info, std::string filename);
+	/**
+	 * @brief writeToFile function to write contents in file named 'filename'
+	 * @param info entire string of data to be written to file
+	 * @param filename name of the filee to be created or overwritten
+	 */
+	void writeToFile(std::string &info, std::string filename);
 }
 
 
