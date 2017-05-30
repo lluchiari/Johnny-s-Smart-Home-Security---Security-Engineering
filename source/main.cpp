@@ -167,6 +167,8 @@ int main(int argc, char *argv[]) {
 			std::string filename = source.at(1).substr(0, source.at(1).find("."));
 			try {
 				cryptogram = program.encryption(message, filename);
+                std::string aux = cryptogram->toString();
+                //utils::writeToFile(aux, filename.append(".cript"));
             }
 			catch(const char *err) {
                 std::cerr << err << std::endl;
@@ -201,7 +203,7 @@ int main(int argc, char *argv[]) {
 			program.decryption(message, aux);
             std::string filename = source.at(1).substr(0, source.at(1).find("."));
             try {
-                utils::writeToFile(message, filename.append(".txt"));
+                //utils::writeToFile(message, filename.append(".txt"));
             }
             catch(const char *err) {
                 std::cerr << err << std::endl;
